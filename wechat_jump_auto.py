@@ -221,6 +221,14 @@ def yes_or_no(prompt, true_value='y', false_value='n', default=True):
         prompt = 'Please input %s or %s: ' % (true_value, false_value)
         i = input(prompt)
 
+def gettmp(distance):
+    tmp = 0
+    if distance < 600:
+        tmp = 15 + (600 - distance) / 100 * 5
+        if tmp > 25:
+            tmp = 25
+
+    return tmp
 
 def main():
     '''
@@ -243,7 +251,11 @@ def main():
         ts = int(time.time())
         print(ts, piece_x, piece_y, board_x, board_y)
         set_button_position(im)
-        jump(math.sqrt((board_x - piece_x) ** 2 + (board_y - piece_y) ** 2))
+        # jump(math.sqrt((board_x - piece_x) ** 2 + (board_y - piece_y) ** 2))
+        distance = math.sqrt((board_x - piece_x) ** 2 + (board_y - piece_y) ** 2)
+        tmp = gettmp(distance)
+        distance = distance + tmp + random.uniform(-20,20)
+        jump(distance)
         if debug_switch:
             debug.save_debug_screenshot(ts, im, piece_x, piece_y, board_x, board_y)
             debug.backup_screenshot(ts)
@@ -255,9 +267,10 @@ def main():
                 sys.stdout.flush()
                 time.sleep(1)
             print('\n继续')
-            i, next_rest, next_rest_time = 0, random.randrange(30, 100), random.randrange(10, 60)
-        time.sleep(random.uniform(0.9, 1.2))   # 为了保证截图的时候应落稳了，多延迟一会儿，随机值防 ban
+            i, next_rest, next_rest_time = 0, random.randrange(30, 80), random.randrange(2, 3)
+        time.sleep(random.uniform(1.1, 1.5))   # 为了保证截图的时候应落稳了，多延迟一会儿，随机值防 ban
 
 
 if __name__ == '__main__':
     main()
+
